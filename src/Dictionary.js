@@ -5,70 +5,67 @@ import Photos from "./Photos";
 import "./Dictionary.css";
 
 export default function Dictionary(props) {
-    let [keyword, setKeyword] = useState(props.defaultKeyword);
-    let [results, setResults] = useState(null);
-    let [loaded, setLoaded] = useState(false);
-    let [photos, setPhotos] = useState(null);
+  let [keyword, setKeyword] = useState(props.defaultKeyword);
+  let [results, setResults] = useState(null);
+  let [loaded, setLoaded] = useState(false);
+  let [photos, setPhotos] = useState(null);
 
-    function handleDictionaryResponse(response) {
-        setResults(response.data[0]);
-    }
+  function handleDictionResponse(response) {
+    setResults(response.data[0]);
+  }
 
-    function handlePexelsResponse(response) {
-        console.log(response);
-        setPhotos(response.data.photos);
+  function handlePexelsResponse(response) {
+    setPhotos(response.data.photos);
+  }
 
-    }
-
-    function search() {
-    // documentation: https://dictionaryapi.dev/
+  function search() {
+    // documentation: https://dictionaryapi.dev/e
     let apiUrl = `https://api.dictionaryapi.dev/api/v2/entries/en_US/${keyword}`;
-    axios.get(apiUrl).then(handleDictionaryResponse);
+    axios.get(apiUrl).then(handleDictionResponse);
 
-    let pexelsApiKey = "aob6b1bc95bbcf3taf0ee93f974adfb4";
-    let pexelsApiUrl = `https://api.shecodes.io/images/v1/search?query={keyword}&key={aob6b1bc95bbcf3taf0ee93f974adfb4}`;
-    // let pexelsApiUrl = `https://api.shecodes.io/images/v1/search?query=${keyword}&per_page=9`;
-    // let pexelsApiUrl = `https://api.pexels.com/v1/search?query=${keyword}&per_page=9`;
-    // https://api.shecodes.io/images/v1/search?query=${keyword}&key={key}
-    let headers = { Authorization: `Bearer ${pexelsApiKey}` };
+    let pexelsApiKey =
+      "Ts4TFaOPkuOac6DsVazJVBDB87fVOIe4Qa2v0UrKdGwcUR4b0UUBP20K";
+    let pexelsApiUrl = `https://api.pexels.com/v1/search?query=${keyword}&per_page=9`;
+    let headers = { Authorization: `${pexelsApiKey}` };
     axios.get(pexelsApiUrl, { headers: headers }).then(handlePexelsResponse);
-    // axios.get(pexelsApiUrl).then(handlePexelsResponse);
-    }
+  }
 
-   function handleSubmit(event) {
+  function handleSubmit(event) {
     event.preventDefault();
     search();
-   }
+  }
 
-   function handleKeywordChange(event) {
-     setKeyword(event.target.value);
-   }
+  function handleKeywordChange(event) {
+    setKeyword(event.target.value);
+  }
 
-   function load() {
+  function load() {
     setLoaded(true);
     search();
-   }
+  }
 
-   if (loaded) {
+  if (loaded) {
     return (
-        <div className="Dictionary">
-            <section>
-                <h1>What word do you want to look up?</h1>
-            <form onSubmit={handleSubmit}>
-                <input type="search" onChange={handleKeywordChange} 
-                defaultValue={props.defaultKeyword} 
-                />
-             </form>
-             <div className="hint">
-                suggested words: sunset, wine, yoga, plant...
-             </div>
-            </section>
-            <Results results={results} />
-            <Photos photos={photos} />
-        </div>
+      <div className="Dictionary">
+        <section>
+          <h1>What word do you want to look up?</h1>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="search"
+              onChange={handleKeywordChange}
+              defaultValue={props.defaultKeyword}
+            />
+          </form>
+          <div className="hint">
+            suggested words: sunset, wine, yoga, plant...
+          </div>
+        </section>
+        <Results results={results} />
+        <Photos photos={photos} />
+      </div>
     );
-   } else {
+  } else {
     load();
     return "Loading";
-   }
   }
+}
